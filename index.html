@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imágenes con lluvia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Cascadia Code PL', monospace;
+      background-color: #0a0a0a;
+      overflow: hidden;
+      margin: 0;
+      height: 100vh;
+      position: relative;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100%) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    .falling-img {
+      position: absolute;
+      top: -80px;
+      width: 60px;
+      height: auto;
+      animation: fall linear forwards;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Animación de caída para gotas */
+    @keyframes dropFall {
+      0% { transform: translateY(-100%) scaleX(1); opacity: 0.5; }
+      100% { transform: translateY(100vh) scaleX(1); opacity: 0; }
+    }
+
+    .raindrop {
+      position: absolute;
+      top: -10px;
+      width: 2px;
+      height: 20px;
+      background: rgba(173, 216, 230, 0.6);
+      border-radius: 50%;
+      animation: dropFall linear forwards;
+      z-index: 2;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="text-white text-4xl text-center mt-10 relative z-3">🫧 Ady</h1>
+
+  <script>
+    const images = ["img/foto1.png", "img/foto2.jpg"];
+    const maxConcurrent = 5;
+    let activeImages = 0;
+
+    function createFallingImage() {
+      if (activeImages >= maxConcurrent) return;
+      const img = document.createElement("img");
+      img.src = images[Math.floor(Math.random() * images.length)];
+      img.classList.add("falling-img");
+      img.style.left = Math.random() * window.innerWidth + "px";
+      const size = 40 + Math.random() * 60;
+      img.style.width = size + "px";
+      const duration = 3 + Math.random() * 4;
+      img.style.animationDuration = duration + "s";
+      document.body.appendChild(img);
+      activeImages++;
+      img.addEventListener("animationend", () => {
+        img.remove();
+        activeImages--;
+      });
+    }
+
+    setInterval(createFallingImage, 700);
+
+    const maxDrops = 100;
+    let activeDrops = 0;
+
+    function createRaindrop() {
+      if (activeDrops >= maxDrops) return;
+      const drop = document.createElement("div");
+      drop.classList.add("raindrop");
+      drop.style.left = Math.random() * window.innerWidth + "px";
+      drop.style.animationDuration = 0.5 + Math.random() * 1.5 + "s";
+      document.body.appendChild(drop);
+      activeDrops++;
+      drop.addEventListener("animationend", () => {
+        drop.remove();
+        activeDrops--;
+      });
+    }
+
+    setInterval(createRaindrop, 100); 
+  </script>
+</body>
+</html>
